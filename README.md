@@ -29,3 +29,7 @@ Example scene with simple top-down NavMeshAgent character that can move to the m
         }
     }
 
+
+
+https://user-images.githubusercontent.com/39065803/125205583-9e5a9480-e28b-11eb-8f77-54c0eb0785db.mp4
+
