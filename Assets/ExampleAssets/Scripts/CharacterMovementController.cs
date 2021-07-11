@@ -6,6 +6,7 @@ public class CharacterMovementController : MonoBehaviour
     [SerializeField] private RaycastProvider raycastProvider;
     private TrackableNavMeshAgent agent;
     private Animator animator;
+    private string characterState = "Idle";
     private void Awake()
     {
         agent = GetComponent<TrackableNavMeshAgent>();
@@ -19,18 +20,23 @@ public class CharacterMovementController : MonoBehaviour
             {
                 agent.SetDestination(interactable.transform.position);
                 agent
-                    .OnPathStart(() => print("Running towards: " + interactable.gameObject.name))
-                    .OnPathComplete(() => interactable.Interact());
+                    .OnPathStart   (() => characterState = "Running towards: " + interactable.gameObject.name)
+                    .OnPathComplete(() => characterState = "Arrived to: " + interactable.gameObject.name);
             }else if (raycastProvider.RayFromCamera(out RaycastHit hit))
             {
                 agent.SetDestination(hit.point);
                 agent
-                    .OnPathStart   (() => print("Starting a path with length of: " + agent.RemainingDistance))
-                    .OnPathChanged (() => print("Changing path"))
-                    .OnPathComplete(() => print("Path completed!"));
+                    .OnPathStart   (() => characterState = "Starting a path with length of: " + agent.RemainingDistance)
+                    .OnPathChanged (() => characterState = "Changing path") 
+                    .OnPathComplete(() => characterState = "Path completed!");
             }
         }
 
         animator.SetBool("Run", agent.Velocity.sqrMagnitude > 0f);
+    }
+
+    void OnGUI()
+    {
+        GUI.Box(new Rect(200, 200, 300, 25), characterState);
     }
 }
